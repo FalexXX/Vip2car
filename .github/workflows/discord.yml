@@ -1,0 +1,23 @@
+name: Notificar a Discord
+
+# 👇 Cuándo se ejecuta este workflow
+on:
+  push:                # Cuando haces git push
+    branches:
+      - main           # Solo en la rama "main" (puedes cambiarlo si quieres)
+  pull_request:        # También cuando se crea un Pull Request
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Enviar notificación a Discord
+        uses: tsickert/discord-webhook@v5.3.0
+        with:
+          webhook-url: ${{ secrets.DISCORD_WEBHOOK }}
+          content: |
+            🔔 **Nuevo evento en GitHub**
+            📂 Repo: ${{ github.repository }}
+            👤 Autor: ${{ github.actor }}
+            📌 Evento: ${{ github.event_name }}
+            🔗 Commit/PR: ${{ github.event.head_commit.url || github.event.pull_request.html_url }}
